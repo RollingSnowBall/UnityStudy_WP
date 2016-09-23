@@ -68,6 +68,6 @@ public class Manager : MonoBehaviour {
 	}
 
 	public void openCodeURL(){
-		Application.OpenURL(Config.szCodeURL);
+		Application.OpenURL(Config.szSaderScrollingBackgroundCodeURL);
 	}
 }
