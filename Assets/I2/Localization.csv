@@ -1,2 +1,6 @@
 ﻿Key,Type,Desc,Chinese,English
 warningProgramNotFinish,Text,,项目{0}暂时未完成,the program {0} not finish yet
+specularLightVert,Text,,片段高光,
+specularLightFrag,Text,,顶点高光,
+diffuseLightVert,Text,,顶点漫反射,
+diffuseLightFrag,Text,,片段漫反射,

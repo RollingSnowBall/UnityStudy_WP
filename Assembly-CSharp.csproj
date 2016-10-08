@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{1A23B21B-2AC9-9BE5-B057-DA49225B9D07}</ProjectGuid>
+    <ProjectGuid>{3AD5D737-BB46-43C5-6011-5F44AA481467}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -80,8 +80,12 @@
      <Compile Include="Assets\Scripts\MenuChoice\RightMainMenu.cs" />
      <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Shader\ScrollingBackground\Manager.cs" />
+     <None Include="Assets\Shader\SpecularLight\Shader\SpecularLightVert.shader" />
      <None Include="Assets\Shader\ScrollingBackground\shader.shader" />
+     <None Include="Assets\Shader\SpecularLight\Shader\DiffuseLightFrag.shader" />
+     <None Include="Assets\Shader\SpecularLight\Shader\DiffuseLightVert.shader" />
      <None Include="Assets\I2\Localization\readme.txt" />
+     <None Include="Assets\Shader\SpecularLight\Shader\SpecularLightFrag.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Develop/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -89,7 +93,7 @@
  <HintPath>C:/Develop/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="ArabicSupport">
- <HintPath>C:/Develop/Unity/Program/UnityStudy_WP-Shader-develop/Assets/I2/Localization/Dlls/ArabicSupport.dll</HintPath>
+ <HintPath>C:/Develop/Unity/Program/UnityStudy/Assets/I2/Localization/Dlls/ArabicSupport.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

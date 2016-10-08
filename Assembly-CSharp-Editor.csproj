@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{D54CBCEB-986A-C830-E6C7-3580702D6AD4}</ProjectGuid>
+    <ProjectGuid>{B34427BE-378E-2EC1-6075-FF059C8C22C5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -70,8 +70,12 @@
      <Compile Include="Assets\I2\Localization\Scripts\Editor\Localization\LocalizationEditor_Warnings.cs" />
      <Compile Include="Assets\I2\Localization\Scripts\Editor\Tools_NGUI_to_I2.cs" />
      <Compile Include="Assets\I2\Localization\Scripts\Editor\UpgradeManager.cs" />
+     <None Include="Assets\Shader\SpecularLight\Shader\SpecularLightVert.shader" />
      <None Include="Assets\Shader\ScrollingBackground\shader.shader" />
+     <None Include="Assets\Shader\SpecularLight\Shader\DiffuseLightFrag.shader" />
+     <None Include="Assets\Shader\SpecularLight\Shader\DiffuseLightVert.shader" />
      <None Include="Assets\I2\Localization\readme.txt" />
+     <None Include="Assets\Shader\SpecularLight\Shader\SpecularLightFrag.shader" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Develop/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -97,7 +101,7 @@
  <HintPath>C:/Develop/Unity/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
  </Reference>
  <Reference Include="ArabicSupport">
- <HintPath>C:/Develop/Unity/Program/UnityStudy_WP-Shader-develop/Assets/I2/Localization/Dlls/ArabicSupport.dll</HintPath>
+ <HintPath>C:/Develop/Unity/Program/UnityStudy/Assets/I2/Localization/Dlls/ArabicSupport.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Develop/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -111,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{1A23B21B-2AC9-9BE5-B057-DA49225B9D07}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{3AD5D737-BB46-43C5-6011-5F44AA481467}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
