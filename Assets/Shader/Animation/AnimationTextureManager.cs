@@ -15,7 +15,7 @@ public class AnimationTextureManager : MonoBehaviour {
 	}
 
 	public void JumpGit(){
-		Application.OpenURL("");
+		Application.OpenURL("https://github.com/RollingSnowBall/UnityStudy_WP/tree/Shader/develop/Assets/Shader/Animation");
 	}
 
 	public void GoToMainMenu(){
