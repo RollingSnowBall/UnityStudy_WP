@@ -1,0 +1,89 @@
+//声明是Anidriod程序
+//如果是编译apk，值为’com.android.application’，如果编译的是库，则需要改为’com.android.library’
+apply plugin: 'com.android.application'
+
+repositories {
+    /*
+    maven {
+        name "Fyber's maven repo"
+        url "https://fyber.bintray.com/maven"
+    }
+    maven {
+        url "${localAndroidMavenRepo}"
+    }
+    */
+}
+
+//项目依赖的远程包如果有更新，会有提醒或者自动更新吗？ 
+//不会的，需要你手动设置changing标记为true，这样gradle会每24小时检查更新，通过更改resolutionStrategy可以修改检查周期。
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 15, 'minutes'
+}
+
+dependencies {
+    //编译libs目录下的所有jar包
+    compile fileTree(dir: 'libs', include: '*.jar')
+    
+    //compile 'com.company.sdk:core:+'
+
+}
+
+android {
+    //编译SDK的版本
+    compileSdkVersion 23
+    //build tools的版本
+    buildToolsVersion "23.0.3"
+
+    //dex加速
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+        preDexLibraries false
+    }
+
+    defaultConfig {
+        //应用包名
+        applicationId 'com.wp.unity.study'
+        multiDexEnabled true
+        //支持最低设备sdk的版本
+        minSdkVersion 16
+        //支持目标设备sdk的版本
+        targetSdkVersion 21
+        //应用版本号
+        versionCode 1
+        //应用版本名称
+        versionName "1.0"
+    }
+
+    //签名
+    signingConfigs {
+        release {
+            storeFile file("../wp.jks")
+            storePassword "123456"
+            keyAlias "wp"
+            keyPassword "123456"
+        }
+    }
+
+    sourceSets.main {
+        jniLibs.srcDirs "libs"
+    } 
+
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    //忽略Lint
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}

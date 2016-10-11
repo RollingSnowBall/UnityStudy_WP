@@ -1,0 +1,32 @@
+-injars /Users/wp/Documents/unity3d/Unity_Study/Project/Android/UnityStudy_WP/app/build/intermediates/transforms/jarMerging/debug/jars/1/1f/combined.jar
+-outjars /Users/wp/Documents/unity3d/Unity_Study/Project/Android/UnityStudy_WP/app/build/intermediates/multi-dex/debug/componentClasses.jar
+
+-libraryjars /Users/wp/Documents/develop/adt-bundle-mac-x86_64-20140702/sdk/build-tools/23.0.3/lib/shrinkedAndroid.jar
+
+-forceprocessing
+-dontoptimize
+-dontobfuscate
+-dontusemixedcaseclassnames
+-dontpreverify
+-dontnote **,com.android.tools.fd.**,android.support.multidex.MultiDexExtractor
+-dontwarn **
+-printconfiguration /Users/wp/Documents/unity3d/Unity_Study/Project/Android/UnityStudy_WP/app/build/intermediates/multi-dex/debug/components.flags
+
+
+-keep class com.wp.unity.study.UnityPlayerActivity {
+    <init>();
+}
+
+-keep public class * extends android.app.backup.BackupAgent {
+    <init>();
+}
+
+-keep public class * extends java.lang.annotation.Annotation {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.android.tools.fd.** {
+    <fields>;
+    <methods>;
+}
