@@ -12,7 +12,7 @@ public class Yodo1Editor : Editor
 		AndroidPostProcess.ExportAndroidProject ();
 	}
 
-	[MenuItem("WpCoustomTool/Android/Sign Editor")]
+	[MenuItem("WpCoustomTool/Android/Test CMD")]
 	public static void SignEditor () 
 	{
 		string shell = Path.GetFullPath(Application.dataPath +"/Editor/Android/Editor/AndroidAPI/Build/print");
