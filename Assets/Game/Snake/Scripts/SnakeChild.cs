@@ -6,5 +6,6 @@ public class SnakeChild : MonoBehaviour {
 	public Transform transformNext;
 
 	void Awake(){
+		
 	}
 }
