@@ -9,18 +9,25 @@ public class SnakeHead : SnakeChild {
 
 	private float fTime;
 
+	public float fSpeed;
+
+	private Transform transformNextDirection;
+
+	void Awake(){
+		transformNextDirection = transformFront;
+	}
+
 	void Update(){
 		fTime += Time.deltaTime;
-		if(fTime > 1.0F){
+		if(fTime > fSpeed){
 			fTime = 0;
-			this.transform.position = transformFront.position;
+			this.transform.position = transformNextDirection.position;
 		}
 
 	}
 
 	void Handel(){
 		if(Input.GetKeyDown(KeyCode.W)){
-				
 		}else if(Input.GetKeyDown(KeyCode.A)){
 			
 		}else if(Input.GetKeyDown(KeyCode.D)){
