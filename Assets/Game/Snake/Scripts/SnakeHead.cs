@@ -16,6 +16,8 @@ public class SnakeHead : SnakeChild {
 
 	private Transform transformNextDirection;
 
+	public SnakeHandle handle;
+
 	void Awake(){
 		transformNextDirection = transformUp;
 	}
@@ -27,6 +29,9 @@ public class SnakeHead : SnakeChild {
 			fTime = 0;
 			this.transform.position = transformNextDirection.position;
 			transformSurface.LookAt(transformNextDirection);
+			if(null != handle){
+				handle.UpdateSnakeChildren();	
+			}
 		}
 	}
 

@@ -33,6 +33,15 @@ public class SnakeHandle : MonoBehaviour {
 		}
 	}
 
+	public void UpdateSnakeChildren(){
+		for(int i = 1; i < listChild.Count; i++){
+			listChild[i].transform.LookAt(listChild[i - 1].transform);
+		}
+		for(int i = listChild.Count - 1; i > 0; i--){
+			listChild[i].gameObject.transform.position = listChild[i - 1].transformNext.gameObject.transform.position;
+		}
+	}
+
 	void Update(){
 #if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.Alpha1)){
