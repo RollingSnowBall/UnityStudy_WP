@@ -35,7 +35,7 @@ public class SnakeHandle : MonoBehaviour {
 
 	void Update(){
 #if UNITY_EDITOR
-		if(Input.GetKeyDown(KeyCode.A)){
+		if(Input.GetKeyDown(KeyCode.Alpha1)){
 			addChild();
 		}
 #endif
