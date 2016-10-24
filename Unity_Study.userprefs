@@ -1,14 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Editor/Android/Editor/WpCustomEditor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Shader/SpecularLight/Shader/DiffuseLightFrag.shader">
     <Files>
-      <File FileName="Assets/Shader/Animation/Animation.shader" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/MenuChoice/MenuChildFunctionButton.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/MenuChoice/MenuChoiceFunButton.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/MenuChoice/MenuChoice.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Android/Editor/WpCustomEditor.cs" Line="19" Column="28" />
-      <File FileName="Assets/Editor/Android/Editor/Utils/EditorUtils.cs" Line="50" Column="2" />
-      <File FileName="Assets/Editor/Android/Editor/AndroidAPI/Scripts/AndroidConfig.cs" Line="8" Column="95" />
+      <File FileName="Assets/Shader/SpecularLight/Shader/DiffuseLightVert.shader" Line="44" Column="1" />
+      <File FileName="Assets/Shader/SpecularLight/Shader/DiffuseLightFrag.shader" Line="25" Column="13" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
