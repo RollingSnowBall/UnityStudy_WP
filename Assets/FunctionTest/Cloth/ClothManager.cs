@@ -32,4 +32,12 @@ public class ClothManager : Singleton<ClothManager> {
 			cloth.damping = sliderDamping.value;
 		}
 	}
+
+	public void openCode(){
+		Application.OpenURL(Config.szClothFunction);
+	}
+
+	public void goBackMainMenu(){
+		Utils.openMainMenue();
+	}
 }

@@ -1,7 +1,9 @@
 /Library
 /Temp
 /app
-.userprefs
+*.userprefs
 /App
 /WebGL
 /obj
+/Project
+*.sln
