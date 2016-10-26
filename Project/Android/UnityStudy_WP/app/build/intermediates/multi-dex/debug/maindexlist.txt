@@ -1,4 +1,0 @@
-
-com/wp/unity/study/UnityPlayerActivity.class
-com/unity3d/player/a$a.class
-com/unity3d/player/UnityPlayer.class
