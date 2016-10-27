@@ -30,23 +30,24 @@ public class NGUIDemoUIManager : Singleton<NGUIDemoUIManager> {
 
 	public void ShowMainMenu(bool bIsShow){
 		if(null != goMainMenu){
-			if(!bIsShow){
-				goMainMenu.GetComponent<TweenAlpha>().PlayReverse();
-				ShowUiWithAlphaTween(goMainMenu.gameObject, false);
-//				NGUITils.ShowUiWithAlphaTween(goMainMenu.gameObject, false);
+			TweenAlpha tween = goMainMenu.GetComponent<TweenAlpha>();
+			if(null != tween){
+				if(!bIsShow){
+					tween.PlayReverse();
+					StartCoroutine(NGUITils.HideUiWithAlphaTween(goMainMenu.gameObject));
+				}else{
+					goMainMenu.gameObject.SetActive(true);
+					tween.Play();
+					int count = transformFunctionRoot.childCount;
+					for(int i = 0; i < count; i++){
+						transformFunctionRoot.GetChild(i).gameObject.SetActive(false);
+					}
+				}
 			}
 		}
 	}
 
-	IEnumerator ShowUiWithAlphaTween(GameObject goWidget, bool bIsShow){
-		if(null != goWidget){
-			TweenAlpha tween = goWidget.GetComponent<TweenAlpha>();
-			if(null != tween){
-				yield return new WaitForSeconds(tween.duration);
-				if(null != goWidget){
-					goWidget.SetActive(false);
-				}
-			}
-		}
+	public void GoBackToMainMenu(){
+		Utils.openMainMenue();
 	}
 }

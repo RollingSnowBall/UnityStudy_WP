@@ -217,6 +217,10 @@
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoFunctionChoiceButton.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoUIManager.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUITils.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\SkillCD\SkillCDManager.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\SkillCD\SkillCDShowIconBase.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\SkillCD\SkillCDUpdatce.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\SkillCD\SkillCDWhile.cs" />
      <Compile Include="Assets\Scripts\Config.cs" />
      <Compile Include="Assets\Scripts\MenuChoice\MenuChildFunctionButton.cs" />
      <Compile Include="Assets\Scripts\MenuChoice\MenuChoice.cs" />

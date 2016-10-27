@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NGUITils {
 
-	public static IEnumerator ShowUiWithAlphaTween(GameObject goWidget, bool bIsShow){
+	public static IEnumerator HideUiWithAlphaTween(GameObject goWidget){
 		if(null != goWidget){
 			TweenAlpha tween = goWidget.GetComponent<TweenAlpha>();
 			if(null != tween){

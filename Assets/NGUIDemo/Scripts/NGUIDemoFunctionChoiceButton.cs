@@ -5,7 +5,7 @@ public class NGUIDemoFunctionChoiceButton : MonoBehaviour {
 
 	public NGUIDemoType type;
 
-	public void OnClick(){
+	public void OnShowButtonClick(){
 		NGUIDemoUIManager.Instance.ShowFunction(this.type);
 	}
 }
