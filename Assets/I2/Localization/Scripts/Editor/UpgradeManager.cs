@@ -106,6 +106,8 @@ namespace I2.Loc
 					if (i>0) Settings += ";";
 					Settings += symbols[i];
 				}
+
+				if(!Platform.Equals(BuildTargetGroup.WP8) && !Platform.Equals(BuildTargetGroup.BlackBerry))
 				PlayerSettings.SetScriptingDefineSymbolsForGroup(Platform, Settings );
 			}
 		}
