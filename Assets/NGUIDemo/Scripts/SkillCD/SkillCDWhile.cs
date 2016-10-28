@@ -26,7 +26,7 @@ public class SkillCDWhile : SkillCDShowIconBase {
 				bIsInCD = false;
 				_Sprite.gameObject.SetActive(false);
 			}else{
-				_Sprite.fillAmount = 1 - fTimeCount / fCD;
+				_Sprite.fillAmount = 1 - fTimeCount / fCD; //倒计时UI更新
 				yield return 0;
 			}
 		}
