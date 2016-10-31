@@ -213,6 +213,11 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITexture.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIAllWidgetChoiceButton.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIAllWidgetManager.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIInput.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIScrollBar.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIWidgetShowScreen.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoChild.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoFunctionChoiceButton.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoUIManager.cs" />
