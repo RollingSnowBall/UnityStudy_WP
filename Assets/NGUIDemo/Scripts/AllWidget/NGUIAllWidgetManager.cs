@@ -4,7 +4,8 @@ using System.Collections;
 public enum WidgetType{
 	none,
 	InputFiled,
-	ScrollBar
+	ScrollBar,
+	ScrollView
 }
 
 public class NGUIAllWidgetManager : Singleton<NGUIAllWidgetManager> {
@@ -27,6 +28,21 @@ public class NGUIAllWidgetManager : Singleton<NGUIAllWidgetManager> {
 					}else{
 						screen.gameObject.SetActive(false);
 					}
+				}
+			}
+		}
+	}
+
+	public void ShowMainMenu(){
+		if(null != goMainMenu){
+			goMainMenu.SetActive(true);
+		}
+		if(null != transformWorkScreenRoot){
+			int count = transformWorkScreenRoot.childCount;
+			for(int i = 0; i < count; i++){
+				Transform tfChild = transformWorkScreenRoot.GetChild(i);
+				if(null != tfChild){
+					tfChild.gameObject.SetActive(false);
 				}
 			}
 		}
