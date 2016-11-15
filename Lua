@@ -1,0 +1,325 @@
+Lua
+	1、类型
+		string number function boolean nil userdata(自定义) thread table
+	 1.1 table
+	 	1.1.1 遍历
+	 		for i = 1, #a do
+	 			print(a[i])
+	 		end
+	2、表达式
+		2.1 算术操作符
+			+ - * / % ^
+				x^0.5 = x的平方根. x^(-1/3) = x立方根的倒数
+		2.2 关系操作符
+			2.2.1 < > <= >= == ~=(不等)
+			2.2.2 对于table、userdata、和函数 ，Lua 是做引用比较的，只有当他们引用同一个对象时，才认为他们是相等的
+					a = {}; a.x = 1; a.y = 1;
+					b = {}; b.x = 1; b.y = 1;
+					c = a;
+					结果 : a == c; a ~= b;
+			2.2.3 只能对两个数组或者字符串作大小性比较。Lua是安装字母次序比较字符串的，具体的字母次序取决于对Lua的区域设置
+				"qwertyuiop" 中 "qwe" > "qwr"
+		2.3 逻辑操作符
+			and、or、not 所有的逻辑操作符将false 和 nil 视为假，将其他的任何东西视为真
+			2.3.1 	and print(4 and 5) -->5
+						print(false and 4) -->false
+					or	print(4 or 5) -->5
+						print(false or 5) -->5
+					not 永远只返回true 或 false
+						print(not nil) -->true
+						print(not false) -->true
+		2.4 字符串连接 ..    
+			print("Hello" .. "World") -->HelloWorld
+			print(0 .. 1) -->01
+			 #Lua 中的字符串是不可变的值，连接操作符只会创建一个新的字符串，而不会对其原操作数进行任何改变
+			 	a = "Hello"
+			 	print(a .. "World") -->HelloWorld
+			 	print(a) -->Hello
+		2.5 优先级
+			^		not # -(负号)		* / %		+ -			..		< > <= >= ~= ==		and or
+			^ .. 为右结合
+				a + i < b / 2 + 1 	=======		(a + i) < ((b / 2) + 1)
+				x^y^z	======		x^(y^z)
+		2.6 table 构造式
+			用于创建和初始化table的表达式。Lua特有的一种表达式。
+				days = {"1", "2", "3"}
+				a = {x = 10, y = 20}
+				a = {}; a.x = 10; a.y = 20;	
+
+				p = {color = "blue", thick = 2, npoints = 4,
+					{x = 1, y = 0},
+					{x = 2, y = 3},
+					{x = 4, y = 5},
+					{x = 6, y = 7}
+					}
+				print(p[2].x)
+				print(p[1].y)
+				print(p.color)	 
+		2.7 链表
+			list = nil
+			for line in io.lines() do
+				list = {next = list, value = line}
+			end
+	3、语句
+		3.1 赋值
+			a, b = 1, 2
+			x, y = y, x 值互换
+		3.2 局部变量
+			local i = 1
+			local x = x //声明一个局部变量并且用一个全局遍历赋值
+		3.3 程序块
+			do
+				local x = 1
+			end
+		3.4 控制结构
+			3.4.1 if then else
+				if a < 0 then
+					a = 0
+				end
+
+				if a < b then
+					return a
+				else
+					return b
+				end
+			3.4.2 while
+				local i = 1
+				while a[i] do
+					print(a[i])
+					i = i + 1
+				end
+			3.4.3
+				repeat
+					line = io.read()
+				until line ~= ""
+				print(line)
+			3.4.4 for
+				数字型for
+					for i=1,10,1 do
+						print(i)
+					end	
+				泛型for
+					days = {"Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"}
+					revDays = {}
+					for k, v in pairs(days) do
+						revDays[v] = k
+					end
+					for v in pairs(revDays) do
+						print(v)
+					end
+			3.4.5 break \ return
+				由于语法构造的原因，break 和 return 只能是一个快的最后一条语句，
+				他们应是程序块的最后一条语句，或者是 end、else、until 前的一条语句
+				3.4.5.1 break
+					local x = 1
+					while x do
+						if x == 10 then break end
+						x = x + 1
+						print(x)
+					end
+				3.4.5.2 return
+					function  foo()
+						return  -------->使用错误
+						do return end  -------->使用正确
+						x = 1
+						y = x
+					end
+	4、函数
+		函数需要将所有参数放到一对圆括号中，即使调用函数时没有参数，也必须写出一对括号。
+		特例:一个函数若只有一个参数，并且此函数是一个字面字符串或 table 构造式那么圆括号可有可无
+			print "hello"		===			print("hello")
+			dofile 'a.lua'		===			dofile('a.lua')
+			print [[a multi-linemessage]]		===			print([[a multi-linemessage]])
+			f{x = 10, y = 20}		===			f({x = 10, y = 20})
+			type{}			===			type({})
+		4.1 多重返回值
+			function customMax(t)
+				local  mi = 1
+				local  max = t[mi]
+				for i, val in pairs(t) do
+					if val > max then
+						max = val
+						mi = i
+					end
+				end
+					return mi, max
+			end
+			x, y = customMax {10,4,1,5,12,53,123,54,2,33,44,64}
+			print(x, y)
+		4.2 变长参数
+			function customAnd( ... )
+				local x = 1
+				for i, val in pairs(...) do
+					x = x + val
+				end
+				print(x)
+			end
+			customAnd({10,2,3,1})
+		4.3 具名实参
+			rename(old = "temp.lua", new = "temp1.lua")  ------>无效
+			rename( {old = "temp.lua", new = "temp1.lua"} ) ------->有效，括号可以省略
+	5、深入函数
+		function foo(x) return 2 * x end
+		foo = function(x) return 2 * x end
+		5.1 高阶函数
+			接受另一个函数作为实参的称其为"高阶函数"
+			names = {"Peter", "Paul", "Mary"}
+			grades = {Mary = 10, Paul = 7, Peter = 8}
+			table.sort(names, function ( n1, n2 )
+				return grades[n1] > grades[n2]
+			end)
+		5.2 closure (闭合函数)
+			function newCounter( )
+				local  i = 0
+				return function ( )
+					i = i + 1
+					return i
+				end
+			end
+
+			c1 = newCounter()
+			print(c1()) -------------->1
+			print(c2()) -------------->2
+		5.3 尾调用(proper tail call)
+			function f(x) return g(x) end
+			当f调用完之后就再无其他事情可做了。
+			因此在这种情况中程序就不需要返回那个"尾调用"所在的函数了.所以在"尾调用"之后，
+			程序也不需要保存热河关于该函数的栈信息了。
+			当g返回时，执行控制权可以直接返回到调用f的那个点上。使得在进行"尾调用"时不耗费任何栈控件。
+			称为"尾调用消除"
+			return x[i].foo(x[j] + a * b, i + j)  ---是
+			return g(x) + 1 ---不是
+	6、迭代器与泛型for
+		6.1 迭代器
+			function allwords( )
+				local line = io.read()  --当前行
+				local pos = 1 			--一行中的当前位置
+				return function ( )		---迭代器函数
+					while line do  		---若为有效的行内容就进入循环
+						local s, e = string.find(line, "%w+", pos)
+						if s then  		---是否找到一个单词
+							pos = e + 1 		---该单词的下一个位置
+							return string.sub(line, s, e) 		---返回该单词
+						else
+							line = io.read() 		---没有找到单词，尝试下一行
+							pos = 1 				---在第一个位置上重新开始
+						end
+					end
+					return nil 				---没有其余行了，遍历结束
+				end
+			end
+		6.2 泛型for
+			for <var-list> in <exp-list> do
+				<body>
+			end
+			<var-list> 是一个或多个变量名的列表，以逗号分隔
+			<exp-list> 是一个或多个表达式的列表，以逗号分隔
+			for k, v in pairs(t) do print(k, v) end
+	7 编译 loadstring
+		i = 0
+		f = loadstring("i = i + 1; print(i)")
+		7.1  loadstring 在编译时不涉及词法域，所以操作的是全局变量，因为loadstring总是在全局环境中编译它的字符串
+			i = 32
+			local i = 0
+			f = loadstring("i = i + 1; print(i)")
+			g = function ( )
+				i = i + 1
+				print(i)
+			end
+
+			f() ------>33
+			g() --------1
+		7.2 如果代码中有语法错误，loadstring会返回nil，最终的错误消息可能会是"attempt to call a nil value"
+		为了更清楚的显示错误消息，使用assert
+			assert(loadstring(s))()
+		7.3 速度
+			f = loadstring("i = i + 1")
+			f = function (  )
+				i = i + 1
+			end
+			第二块代码快的多，因为他只在编译对应用程序块时编译一次
+			第一块代码在每次调用loadstring 时都被重新编译
+	8、error检测
+		8.1 数字检测 tonumber(i) 如果为数字则返回数字否则返回nil
+		8.2 assert()
+			函数检查其第一个参数是否为true，若为true，则简单的返回该函数，否则引发一个错误，输出第二个参数
+		8.3 pcall ------protected call
+			保护模式调用
+	9、协程
+		9.1 四种状态
+			suspended 挂起、running 运行、dead 死亡、normal 正常
+			当创建一个协同程序时，它处于挂起状态。
+		9.2 yield
+			co = coroutine.create(function ( )
+				for i=1,10 do
+					print(i)
+					coroutine.yield()
+				end
+			end)
+			该函数可以让一个运行中的协同程序挂起，而之后可以再恢复他的运行.
+		9.3 resume 是在保护模式中运行的。因此，如果在一个协同程序的执行中发生任何错误，lua是不会显示错误信息的。
+		而是将执行权返回给resume调用。
+			当一个协同程序A唤醒另一个协同程序B时，协同程序A就处于一个特殊状态，既不是挂起状态，也不是运行状态，称为"正常"状态
+			返回值为是否有错误 和 yield的返回值
+			co = coroutine.create(function ( )
+				yield return 0, 1, 3
+			end)
+			print(coroutine.resume(co)) ------>true 0 1 3
+		9.4 生产者-消费者
+			function producer(  )
+				while true do
+					local x = io.read()
+					send(x)
+				end
+			end
+
+			function consumer( )
+				while true do
+					local x = reveive()
+					io.write(x, "\n")
+				end
+			end
+
+			function receive( )
+				local status, value = coroutine.resume(producer)
+				return value
+			end
+
+			function send( x )
+				coroutine.yield(x)
+			end
+		9.5 过滤器(filter)
+			function reveive( prod )
+				local status, value = coroutine.resume(prod)
+				return value
+			end
+
+			function send( x )
+				coroutine.yield(x)
+			end
+
+			function producer(  )
+				return coroutine.create(function ( )
+					while true do
+						local x = io.read()
+						send(x)
+					end
+				end)
+			end
+
+			function filter( prod )
+				return coroutine.create(function ( )
+					for line = 1, math.huge do
+						local x = receive(prod)
+						x = string.format("%5d %s", line, x)
+						send(x)
+					end
+				end)
+			end
+
+			function consumer( prod )
+				while true do
+					local x = reveive(prod)
+					io.write(x, "\n")
+				end
+			end

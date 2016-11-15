@@ -219,6 +219,7 @@
      <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIScrollBar.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIScrollView.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIScrollViewItem.cs" />
+     <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUISlider.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\AllWidget\NGUIWidgetShowScreen.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoChild.cs" />
      <Compile Include="Assets\NGUIDemo\Scripts\NGUIDemoFunctionChoiceButton.cs" />

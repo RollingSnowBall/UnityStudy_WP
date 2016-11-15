@@ -5,7 +5,8 @@ public enum WidgetType{
 	none,
 	InputFiled,
 	ScrollBar,
-	ScrollView
+	ScrollView,
+	Slider
 }
 
 public class NGUIAllWidgetManager : Singleton<NGUIAllWidgetManager> {
