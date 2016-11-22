@@ -323,3 +323,47 @@ Lua
 					io.write(x, "\n")
 				end
 			end
+	10、数据结构
+		10.1 字符串缓冲
+			逐行地读取一个文件
+				local buff = ""
+				for line in io.lines() do
+					buff = buff .. line .. "\n"
+				end
+	11、元表 metatable 元方法 meatmethod
+		可以通过元表来修改一个值的行为，使其在面对一个非预定义的操作时执行一个指定的操作。
+		action = {}	--元表
+
+		function action.new( value )
+			local temp = {}
+			setmetatable(temp, action)	--元表赋值
+			for k, v in pairs(value) do
+				temp[#temp + 1] = v
+			end
+			return temp
+		end
+
+		-- table转string
+		function action.tostroing( value )
+			return table.concat( value, ", ", 1, #value )
+		end
+
+		function action.add( source,  addition)
+			-- local temp = {}
+			-- setmetatable(temp, action)
+			-- local  source = value.source
+			-- local  addition = value.addition
+			for k, v in pairs(addition) do
+				source[#source + 1] = v
+			end
+			return action.tostroing(source)
+		end
+
+		a = action.new{1,2,3}
+		b = {4,5,6}
+
+		-- print(action.add{source = a, addition = b})
+		print(action.add(a, b))
+
+
+
