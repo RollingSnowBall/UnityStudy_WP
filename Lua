@@ -331,6 +331,7 @@ Lua
 					buff = buff .. line .. "\n"
 				end
 	11、元表 metatable 元方法 meatmethod
+		Lua 中只能设置table的元表
 		可以通过元表来修改一个值的行为，使其在面对一个非预定义的操作时执行一个指定的操作。
 		action = {}	--元表
 
@@ -365,5 +366,91 @@ Lua
 		-- print(action.add{source = a, addition = b})
 		print(action.add(a, b))
 
+		11.1 在元表中，每种算术操作符都有对应的字段名。
+		__add __mul __sub __div __unm(相反数) __mod(取模) __pow(乘幂) __concat(描述连接操作符的行为)
 
+		11.1 重载操作符 __index原方法 __newindex
+		action = {}
 
+		function action.tostroing( value )
+					return table.concat( value, ", ", 1, #value )
+				end
+
+		function action.__add( a, b )
+			for v in pairs(a) do
+				a[v] = a[v] + b
+			end
+			return action.tostroing(a)
+		end
+
+		function action.__index(table, key)
+			print("当访问table中不存在的key值时会调用 __index 方法，比如现在 : " .. key)
+			return "error"
+		end
+
+		function action.__newindex(table, key, value)
+			local temp = table
+			print("现在将要添加新的key值和与其对应的value :")
+			print("key : " .. key)
+			print("value : " .. value)
+			-- temp[key] = value
+			-- return action.tostroing(table)
+		end
+
+		a = {1,2,3}
+		setmetatable(a, action)
+
+		print("重载 + :")
+		print( a + 3)
+		print("\n")
+
+		b = {1,2,3}
+		setmetatable(b, action)
+
+		print("访问table中不存在的key值 : ")
+		print(b[4])
+		print("\n")
+
+		c = {1,2,3}
+		setmetatable(c, action)
+
+		print("添加新的key值和与其对应的value : ")
+		c[4] = 4
+		print(action.tostroing(c))
+		print("\n")
+
+	12、环境
+		Lua 将所有的全局变量保存在一个常规的table _G 中
+			for n in pairs(_G) do
+				print(n)
+			end
+		12.1 具有动态名字的全局变量
+			有些变量的名称存储在另一个变量中，或者需要计算才能得到，为了获取这个变量的值
+				value = loadstring("return" .. varname)()
+				如果varname 是 x ,那么连接操作就是字符串return x。
+				这样做包含了一个新程序块的创建和编译。
+				value = _G[varname] 效率高
+		12.2 全局变量声明
+			大型程序中简单的检测与创建全局变量
+			setmetatable(_G, {
+				__index = function ( _, n )
+					print("没有此全局变量" .. n)
+				end,
+				__newindex = function ( table, k, value )
+					print("add a global variable")
+					rawset(table, k, value)
+				end
+				})
+
+			a = 1;
+			print(a)
+			print(b)
+		12.3 通过setfenv来改变一个函数的环境
+			a = 1
+			setfenv(1, {g = _G})
+			g.print(a)	----->nil
+			g.print(g.a)	---->1
+	13、模块与包
+		13.1 require 使用模块
+			require "mod"
+			mod.foo()
