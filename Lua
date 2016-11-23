@@ -373,8 +373,8 @@ Lua
 		action = {}
 
 		function action.tostroing( value )
-					return table.concat( value, ", ", 1, #value )
-				end
+			return table.concat( value, ", ", 1, #value )
+		end
 
 		function action.__add( a, b )
 			for v in pairs(a) do
@@ -452,5 +452,24 @@ Lua
 			g.print(g.a)	---->1
 	13、模块与包
 		13.1 require 使用模块
-			require "mod"
-			mod.foo()
+			testLib.lua文件:
+				testLib = {}
+
+				function testLib.new( value )
+					local temp = {}
+					for k, v in pairs(value) do
+						temp[#temp + 1] = v
+					end
+					return temp
+				end
+
+				return testLib
+			test.lua文件
+				lib = require "testLib"
+				a = lib.new{1,2,3}
+
+				function tostroing( value )
+					return table.concat( value, ", ", 1, #value )
+				end
+
+				print(tostroing(a)) --->1,2,3
