@@ -369,7 +369,7 @@ Lua
 		11.1 在元表中，每种算术操作符都有对应的字段名。
 		__add __mul __sub __div __unm(相反数) __mod(取模) __pow(乘幂) __concat(描述连接操作符的行为)
 
-		11.1 重载操作符 __index原方法 __newindex
+		11.2 重载操作符 __index原方法 __newindex
 		action = {}
 
 		function action.tostroing( value )
@@ -418,6 +418,19 @@ Lua
 		c[4] = 4
 		print(action.tostroing(c))
 		print("\n")
+
+		11.3 __index 还可以是一个table
+			当它是一个函数时候，lua以table和不存在的key作为参数来调用该函数，当它是一个table时候，
+			lua就以相同的方式来重新访问这个table
+			a = {1,2,3}
+			b = {4,5,6,7}
+			c = {}
+
+			setmetatable(a, c)
+
+			c.__index = b
+
+			print(a[4])	-------->7
 
 	12、环境
 		Lua 将所有的全局变量保存在一个常规的table _G 中
@@ -473,3 +486,152 @@ Lua
 				end
 
 				print(tostroing(a)) --->1,2,3
+		13.2 module 
+			testLib.lua 文件
+				lib = require "testLib" 
+				a = lib.new{1,2,3}
+
+				function tostroing( value )
+					return table.concat( value, ", ", 1, #value )
+				end
+
+				print(tostroing(a))
+			test.lua 文件
+				lib = require "testLib" 
+				a = lib.new{1,2,3}
+
+				function tostroing( value )
+					return table.concat( value, ", ", 1, #value )
+				end
+
+				print(tostroing(a))
+		13.3 require 目录
+			lua 没有目录的概念
+			require "a.b"
+			./a/b.lua
+			/usr/local/lua/a/b.lua
+			/usr/local/lua/a/b/init.lua
+	14 面向对象
+		14.1 self
+			使用self参数是所有面向对象语言的一个核心，
+			大多数面向对象语言都能对程勋元隐藏部分self参数，
+			从而使程序员不必显示地声明这个参数，
+			Lua只需使用冒号就能隐藏该参数
+				function Account:withdraw( v )
+					self.balance = self.balance - v
+				end
+			调用时:
+				a = {balance = 0, withdraw = Account.withdraw}
+				a:withdraw(100)
+		14.2 继承
+			示例1:
+				a = {1,2,3}
+				b = {4,5,6,7}
+				c = {}
+
+				setmetatable(a, c)
+
+				c.__index = b
+
+				print(a[4])----->7
+			示例2:
+				a = {base = 1}
+				setmetatable(a, a)
+
+				function a:add( value )
+					self.base = self.base + value
+					return self.base
+				end
+
+				b = {}
+				setmetatable(b, b)
+				b.__index = a
+
+				c = {}
+				setmetatable(c, c)
+				c.__index = a
+
+				print(a:add(1)) --->2
+				print(b:add(1))	--->3
+				print(c:add(1))	--->3
+		14.3 多重继承
+			local function search( k, plist )
+				for i=1, #plist do
+					local v = plist[i][k]
+					if v then return v end
+				end
+			end
+
+			function createClass( parents )
+				local c = {}
+				local parents = parents
+				setmetatable(c, {__index = function ( t, k )
+					return search(k, parents)
+				end})
+				c.__index = c
+
+				function c:new( o )
+					o = o or {}
+					setmetatable(o, c)
+					return o
+				end
+
+				return c
+			end
+
+			a = {aBase = 1}
+			setmetatable(a, a)
+			function a:add( value )
+				self.aBase = self.aBase + value
+			end
+
+			b = {bBase = 9}
+			setmetatable(b, b)
+			function b:sub( value )
+				self.bBase = self.bBase - value
+			end
+
+			c = createClass{a, b}
+			c:add(1)
+			c:sub(1)
+			print("c aBase : " .. c.aBase)
+			print("c bBase : " .. c.bBase)
+		14.4 私密性 私有性
+			function new( init )
+				local self = {value = init}
+				local add = function ( addition )
+					self.value = self.value + addition
+				end
+
+				local sub = function ( sub )
+					self.value = self.value - sub
+				end
+
+				local get = function ( )
+					return self.value
+				end
+
+				return {add = add, sub = sub, get = get}
+			end
+
+			count = new(1)
+			count.add(1)
+			print(count.get())
+		14.5 单一方法 的做法
+			function new( init )
+				local self = {value = init}
+
+				return function ( action, value )
+					if action == "add" then self.value = self.value + value
+					elseif action == "sub" then self.value = self.value - value
+					elseif action == "get" then return self.value
+					end
+				end
+			end
+
+			count = new(1)
+			print("initial value is : " .. count("get"))
+			count("add", 1)
+			print("after add 1 : " .. count("get"))
+			count("sub", 1)
+			print("after sub 1 : " .. count("get"))
