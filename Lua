@@ -748,3 +748,94 @@ Lua
 				string.char(97) --a
 				string.byte("abc") --97
 				string.byte("abc", 2) --98
+				string.byte("abc", 1, 2) --97 98
+			18.1.1 format
+				print(string.format("pi = %.4f", math.pi)) --- pi = 3.1416
+				d = 5; m = 11; y = 1990
+				print(string.format("%02d/%02d/%04d", d, m, y)) --- 05/11/1990
+				tag, title = "h1", "a title"
+				print(string.format("<%s>%s</%s>", tag, title, tag)) ---<h1>a title</h1>
+		18.2 模式匹配函数
+			fin match gsub(全局替换) gmatch(全局匹配) 
+			18.2.1 string.find 返回起始索引和结尾索引，如果没有找到返回nil
+				s = "hello world"
+				i, j = string.find(s, "hello")
+				print(i, j) --- 1 5
+				string.find 函数还具有一个可选的第三个参数，他是一个索引告诉函数应该从目标字符串的那个位置开始搜索
+			18.2.2 string.match 函数
+				string.match("hello world", "hello") -- hello
+
+				data = "Today is 17/7/1990"
+				string.match(date, "%d+/%d+/%d+") ---17/7/1990
+			18.2.3 string.gsub 
+				s, k = string.gsub("all lii", "l", "x") --- axx xii   --3
+				可选第四个参数，限制替换次数
+				k = 3 替换次数
+				18.2.3.1
+					第三个参数还可以是一个table(包括_G)
+					用来替换
+					group = {}
+					group.a = "Lua"
+					group.b = "great"
+					print(string.gsub("$a is $b", "$(%w+)", group)) -- Lua is great	2
+					还可以是一个方法
+						s ="a%2Bb%3Dc"
+						s = string.gsub(s, "%%(%x%x)", function ( h )
+							return string.char(tonumber(h, 16))
+						end)
+						print(s) -- a+b=c
+			18.2.4 string.gmatch
+				d = "123qwertyuiopasdfghjklqwer"
+				a = string.gmatch(d, "qwe")
+				for w in a do
+					print(w) --qwe
+				end	
+		18.3 模式
+			18.3.1
+			%a 字母
+			%c 控制字母
+			%d 数字
+			%l 小写字母
+			%p 标点符号
+			%s 空白字母
+			%u 大写字母
+			%w 字母和数字字符
+			%x 十六进制数字
+			%z 内部表示为0的字符
+			18.3.2 需要转义的字符 ().%+-*?[]^$
+			18.3.3 .- .*的区别
+				test = "int x; /*x*/ int y; /*y*/"
+				print(string.gsub(test, "/%*.*%*/", "<COMMENT>")) -- int x; <COMMENT>	1
+				print(string.gsub(test, "/%*.-%*/", "<COMMENT>")) -- int x; <COMMENT> int y; <COMMENT>	2
+			18.3.4 ?
+				a = "qwer+1234asdf-5432"
+				print(string.gsub(a, "[+-]?%d+", "A")) -- qwerAasdfA	2
+			18.3.5 如果模式以'^'起始，那么他只会匹配目标字符串的开头部分
+				以'$'结尾，只匹配结尾部分
+				a = "123qwer+1234asdf-5432"
+				print(string.match(a, "^%d+")) -- 123
+				print(string.match(a, "%d+$")) -- 5432
+			18.3.6 "%b<x><y>"
+				以x开头y结尾的字符串
+				a = "hello (13qwer+134asdf-5432)world"
+				print(string.gsub(a, "%b()", "")) -- hello world	1 
+			18.3.7 捕获
+				模式中表示两个字母序列的部分放在一对括号中，就能捕获到
+				d = "Today is 17/7/1990"
+				d, m, y = string.match(d, "(%d+)/(%d+)/(%d+)")
+				print(d, m, y) -- 17	7	1990
+			18.3.8 URL 编码
+				s ="a%2Bb%3Dc" -- a%2Bb%3Dc
+				s = string.gsub(s, "%%(%x%x)", function ( h )
+					return string.char(tonumber(h, 16))
+				end)
+				print(s) --a+b
+
+				a = "%2B"
+				print(string.gsub(a, "%%(%x%x)", "A")) -- A	1
+
+				a = "%2B"
+				print(string.gsub(a, "%%(%x)", "A")) -- AB	1
+			18.3.9 空白捕捉 ()
+				print(string.match("hello", "h()")) -- 2
+				print(string.match("hello", "l()")) -- 4
