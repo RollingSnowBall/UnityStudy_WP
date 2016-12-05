@@ -839,3 +839,121 @@ Lua
 			18.3.9 空白捕捉 ()
 				print(string.match("hello", "h()")) -- 2
 				print(string.match("hello", "l()")) -- 4
+		19 I/O模型
+			19.1 简单I/O模型
+				io.input(filename)调用会以只读模式打开指定的文件，并将其设为当前输出文件。
+				之后除非再次调用 io.input ,否则所有的输入都将来源于这个文件。
+				io.write(a..b..c)应该尽量避免，io.write(a,b,c)效果相同并且可以避免连接操作。
+				19.1.1 write与print不同
+					write在输出时不会添加像制表符或回车这样的额外字符
+						print("hello","Lua");
+						print("Hi")
+							--hello Lua
+							--Hi
+						io.write("hello", "Lua");
+						io.write("Hi","\n")
+							--helloLuaHi
+					write使用当前输出文件而print总是使用标准输出
+					print会自动调用其参数的tostring方法因此他还能显示table、函数和nil
+				19.1.2 io.read从当前输入文件中读取字符串，他的参数决定了要读取的数据
+					"*all" 读取整个文件
+					"*line"读取下一行
+					"*number" 读取一个数字
+					<num> 读取一个不超过<num>个字符的字符串
+				19.1.3 io.lines()迭代器 如果只为了迭代文件中的所有行，那么io.lines迭代器更为合适。
+					local lines = {}
+					for line in io.lines() do lines[#lines + 1] = line end
+					table.sort( lines )
+					for _,l in ipairs(lines) do io.write(l, "\n") end
+			19.2 完整 I/O 模型
+				19.2.1 open
+					io.open(要打开的文件名, 模式字符串)
+					r 读取
+					w 写入 同时会删除文件原来的内容
+					a 追加
+					b 打开二进制文件
+					print(io.open("non-existent-file", "r"))
+						-- nil	non-existent-file: No such file or directory	2
+					错误代码的解释依赖于系统
+					典型做法
+						local f = assert(io.open(filename, mode))
+						如果打开失败，错误消息会成为assert的第二个参数，然后显示这个信息
+				19.2.2 操作
+					local f = assert(io.open(filename, "r"))
+					local t = f:read("*all")
+					f:close()
+				19.2.3 性能
+					1 一次性读取整个文件比逐行地读取要快一些
+					2 如果文件太大无法一次性读取，尽可能大的块读取，例如8KB大小的块
+						为了避免在行中间断开，只需在读取一个块时再加上一行
+							local lines, rest = f:read(BUFFSIZE, "*line")
+							rest 包含了被块所断开的那一行的剩余部分，这样就可以将块与行的剩余部分连接起来，
+							从而得到一个总是起止于行边界上的块
+								local BUFSIZE = 3
+								local f = io.input(arg[1])
+								local cc, lc, wc = 0,0,0 --字符、行、单词计数器
+								while true do
+									local lines, rest = f:read(BUFSIZE, "*line")
+									if not lines then break end
+									if rest then lines = lines .. rest .. "\n" end
+									cc = cc + #lines
+									local _, t = string.gsub(lines, "%S+", " ")
+									wc = wc + t
+									_, t = string.gsub(lines, "\n", "\n")
+									lc = lc + t
+								end
+								print(lc, wc, cc)
+				19.2.4 二进制
+					local inp = assert(io.open(arg[1], "rb"))
+					local out = assert(io.ioen(arg[2], "wb"))
+					local data = inp:read("*all")
+					data = string.gsub(data, "\r\n", "\n")
+					out:write(data)
+					assert(out:close())
+
+					调用: lua prog.lua file.dos file.unix
+				19.2.5 文件操作
+					file:seek() 获取当前位置
+					file:seek("end") 获取文件大小
+					file:seek("set", current) 恢复位置
+			20 操作系统库
+				20.1 日期和时间 time 、 date
+					print(os.time{year = 2016, month = 1, day = 1, hour = 0, min = 0, sec = 0, isdst = true}) --isdst true 表示夏令时
+					print(os.time()) --1451577600
+					print(os.date("today is %a", os.time()))	星期简写	today is Mon
+					print(os.date("today is %A", os.time()))	星期全写	today is Monday
+					print(os.date("today is %b", os.time()))	月份简写	today is Dec
+					print(os.date("today is %B", os.time()))	月份全称	today is December
+					print(os.date("today is %c", os.time()))	日期和时间	today is Mon Dec  5 13:53:31 2016
+					print(os.date("today is %d", os.time()))	一个月中第几天	today is 05
+					print(os.date("today is %H", os.time()))	24小时进制小时数	today is 13
+					print(os.date("today is %I", os.time()))	12小时进制小时数	today is 01
+					print(os.date("today is %j", os.time()))	一年中第几天	today is 340
+					print(os.date("today is %M", os.time()))	分钟数	today is 53
+					print(os.date("today is %m", os.time()))	月份数	today is 12
+					print(os.date("today is %p", os.time()))	上午下午	today is PM
+					print(os.date("today is %S", os.time()))	秒数	today is 31
+					print(os.date("today is %w", os.time()))	一星期中第几天	today is 1
+					print(os.date("today is %x", os.time()))	日期 today is 12/05/16
+					print(os.date("today is %X", os.time()))	日期 today is 13:53:31
+					print(os.date("today is %y", os.time()))	两位数年份 today is 16
+					print(os.date("today is %Y", os.time()))	完整年份	today is 2016
+					print(os.date("today is %%", os.time()))
+					
+					如果不带任何参数调用date函数，他会使用%c。
+					%x %X %c会根据不同的区域和系统而发生变化
+
+					函数 os.clock 会返回当前cpu时间的秒数，一般可用于计算一段代码的执行时间
+					local x = os.clock()
+					local s = 0
+					for i=1,10000 do
+						s = s + 1
+					end
+					print(string.format("elapsed time : %2f\n", os.clock() - x)) --elapsed time : 0.000070
+				20.2 其他系统调用
+					os.exit() 中止当前程序的执行
+					os.getenv() 获取一个环境变量的值
+						os.getenv("Home")
+						如果一个环境变量没有定义返回nil
+					os.execute()运行一条系统命令
+						os.execute("mkdir" .. dirname)
