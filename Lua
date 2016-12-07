@@ -916,44 +916,160 @@ Lua
 					file:seek() 获取当前位置
 					file:seek("end") 获取文件大小
 					file:seek("set", current) 恢复位置
-			20 操作系统库
-				20.1 日期和时间 time 、 date
-					print(os.time{year = 2016, month = 1, day = 1, hour = 0, min = 0, sec = 0, isdst = true}) --isdst true 表示夏令时
-					print(os.time()) --1451577600
-					print(os.date("today is %a", os.time()))	星期简写	today is Mon
-					print(os.date("today is %A", os.time()))	星期全写	today is Monday
-					print(os.date("today is %b", os.time()))	月份简写	today is Dec
-					print(os.date("today is %B", os.time()))	月份全称	today is December
-					print(os.date("today is %c", os.time()))	日期和时间	today is Mon Dec  5 13:53:31 2016
-					print(os.date("today is %d", os.time()))	一个月中第几天	today is 05
-					print(os.date("today is %H", os.time()))	24小时进制小时数	today is 13
-					print(os.date("today is %I", os.time()))	12小时进制小时数	today is 01
-					print(os.date("today is %j", os.time()))	一年中第几天	today is 340
-					print(os.date("today is %M", os.time()))	分钟数	today is 53
-					print(os.date("today is %m", os.time()))	月份数	today is 12
-					print(os.date("today is %p", os.time()))	上午下午	today is PM
-					print(os.date("today is %S", os.time()))	秒数	today is 31
-					print(os.date("today is %w", os.time()))	一星期中第几天	today is 1
-					print(os.date("today is %x", os.time()))	日期 today is 12/05/16
-					print(os.date("today is %X", os.time()))	日期 today is 13:53:31
-					print(os.date("today is %y", os.time()))	两位数年份 today is 16
-					print(os.date("today is %Y", os.time()))	完整年份	today is 2016
-					print(os.date("today is %%", os.time()))
-					
-					如果不带任何参数调用date函数，他会使用%c。
-					%x %X %c会根据不同的区域和系统而发生变化
+		20 操作系统库
+			20.1 日期和时间 time 、 date
+				print(os.time{year = 2016, month = 1, day = 1, hour = 0, min = 0, sec = 0, isdst = true}) --isdst true 表示夏令时
+				print(os.time()) --1451577600
+				print(os.date("today is %a", os.time()))	星期简写	today is Mon
+				print(os.date("today is %A", os.time()))	星期全写	today is Monday
+				print(os.date("today is %b", os.time()))	月份简写	today is Dec
+				print(os.date("today is %B", os.time()))	月份全称	today is December
+				print(os.date("today is %c", os.time()))	日期和时间	today is Mon Dec  5 13:53:31 2016
+				print(os.date("today is %d", os.time()))	一个月中第几天	today is 05
+				print(os.date("today is %H", os.time()))	24小时进制小时数	today is 13
+				print(os.date("today is %I", os.time()))	12小时进制小时数	today is 01
+				print(os.date("today is %j", os.time()))	一年中第几天	today is 340
+				print(os.date("today is %M", os.time()))	分钟数	today is 53
+				print(os.date("today is %m", os.time()))	月份数	today is 12
+				print(os.date("today is %p", os.time()))	上午下午	today is PM
+				print(os.date("today is %S", os.time()))	秒数	today is 31
+				print(os.date("today is %w", os.time()))	一星期中第几天	today is 1
+				print(os.date("today is %x", os.time()))	日期 today is 12/05/16
+				print(os.date("today is %X", os.time()))	日期 today is 13:53:31
+				print(os.date("today is %y", os.time()))	两位数年份 today is 16
+				print(os.date("today is %Y", os.time()))	完整年份	today is 2016
+				print(os.date("today is %%", os.time()))
+				
+				如果不带任何参数调用date函数，他会使用%c。
+				%x %X %c会根据不同的区域和系统而发生变化
 
-					函数 os.clock 会返回当前cpu时间的秒数，一般可用于计算一段代码的执行时间
-					local x = os.clock()
-					local s = 0
-					for i=1,10000 do
-						s = s + 1
-					end
-					print(string.format("elapsed time : %2f\n", os.clock() - x)) --elapsed time : 0.000070
-				20.2 其他系统调用
-					os.exit() 中止当前程序的执行
-					os.getenv() 获取一个环境变量的值
-						os.getenv("Home")
-						如果一个环境变量没有定义返回nil
-					os.execute()运行一条系统命令
-						os.execute("mkdir" .. dirname)
+				函数 os.clock 会返回当前cpu时间的秒数，一般可用于计算一段代码的执行时间
+				local x = os.clock()
+				local s = 0
+				for i=1,10000 do
+					s = s + 1
+				end
+				print(string.format("elapsed time : %2f\n", os.clock() - x)) --elapsed time : 0.000070
+			20.2 其他系统调用
+				os.exit() 中止当前程序的执行
+				os.getenv() 获取一个环境变量的值
+					os.getenv("Home")
+					如果一个环境变量没有定义返回nil
+				os.execute()运行一条系统命令
+					os.execute("mkdir" .. dirname)
+		21 C API c调用lua
+			#include <stdio.h>
+			#include <string.h>
+			#include "lua.hpp"
+			#include "lauxlib.h"
+			#include "lualib.h"
+
+			int main (void){
+				printf("go\n");
+
+				lua_State* L = luaL_newstate();
+
+				luaL_openlibs(L);
+
+				lua_close(L);
+
+				return 0;
+			}
+			21.1 栈操作
+				抽象栈在Lua与C之间交换数据
+				栈中的每个元素都能保存任何类型的Lua值
+				要获取Lua中的一个值时只要调用一个Lua API函数，Lua就会将制定的值压入栈中
+				要将一个值传给Lua时，需要先将这个值压入栈，然后调用Lua API，Lua就会获取该值并将其从栈中弹出
+				Lua以 先出后进 规范操作栈，当调用Lua时，Lua只会改变栈的顶部
+				C有更大的自由度，他可以检索栈中间的元素，插入删除任意位置
+				21.1.1 压入元素
+					void lua_pushnil(lua_State* L);
+					void lua_pushboolean(lua_State* L, int bool);
+					void lua_pushnumber(lua_State* L, lua_Number n); --lua_Number是Lua中的数字类型默认为双精度浮点数 或者单精度浮点数或长整数
+					void lua_pushinteger(lua_State* L, lua_Integer n); --lua_Integer整数类型足以存储大型字符串的长度
+					void lua_pushlstring(lua_State* L, const char* s, size_t* len); --Lua中的字符串不是以零结尾需要长度
+					void lua_pushstring(lua_State* L, const char* s);
+					还有压入C函数、userdata值的函数
+
+					int lua_checkstack(lua_State* L, int sz) --检查栈中是否有足够空间
+				21.1.2 查询元素
+					使用索引
+					第一个压入元素索引为1 第二个2
+					最后压入元素为-1 倒数第二个-2
+					21.1.2.1 检查是否为特定类型
+						int lua_is*(lua_State* L, int index);
+						实际上，lua_isnumber不会检测值是否为数字类型，而是检测值是否可以转为数字类型
+						lua_isstring 同样，因此对于任意数字，lua_isstring都返回真
+					21.1.2.2 返回栈中原色的类型 lua_type
+						返回一个常量，这些常量定义在头文件lua.h中。
+						LUA_TNIT LUA_TBOOLEAN LUA_TNUMBER LUA_TSTRING LUA_TTABLE LUA_TTHREAD LUA_TUSERDATA LUA_TFUNCTION
+					21.1.2.3 取值 lua_to*
+						int lua_toboolean(lua_State* L, int index);
+						lua_Number lua_tonumber(lua_State* L, int index);
+						lua_Integer lua_tointerger(lua_State* L, int index);
+						const char* lua_tolstring(lua_State* L, int index, size_t* len);
+						size_t lua_objlen(lua_State* L, int index);
+
+						如果指定元素不具有正确的类型，调用这些函数也不会有问题 ，会返回0或者NULL
+
+						lua_tolstring 函数会返回一个指向内部字符串副本的指针，并将字符串的长度存入最后一个参数len中。
+						Luaua只要保证这个对应的字符串值还在栈中，那么这个指针就是有效的。
+						当Lua调用的一个C函数返回时，LUA就会清空他的栈。
+						所以不要在C函数之外使用在C函数内获得的指向Lua字符串的指针
+					21.1.2.4 其他栈操作
+						int lua_gettop(lua_State* L); --栈中元素的个数，栈顶元素的索引
+						void lua_settop(lua_State* L, int index); --将栈顶设置为一个指定的位置，修改栈中元素的数量，高出来的丢弃不足的补nil
+						-- lua_settop(L, 0)能清空栈，也可以用负数来索引
+						一个宏来弹出n个元素 #define lua_pop(L, n) lua_settop(L, -(n) - 1)
+						void lua_pushvalue(lua_State* L, int index); -- 将指定索引上值的副本压入栈
+						void lua_remove(lua_State* L, int index); --删除指定索引上的元素，该位置只上的所有元素下移填补空缺
+						void lua_insert(lua_State* L, int index); --上移该位置之上的所有元素来开辟一个空间，将栈顶元素移到该位置
+							lua_insert(L, -1) -- 将栈顶元素移动到栈顶
+						void lua_replace(lua_State* L, int index); --弹出栈顶的值并将该值设置到指定索引上，但不会移动任何东西
+						
+						#include <stdio.h>
+						#include <string.h>
+						#include "lua.hpp"
+						#include "lauxlib.h"
+						#include "lualib.h"
+
+						void printStack(lua_State* L){
+							int size = lua_gettop(L);
+							for(int i = 1; i <= size; i++){
+								int t = lua_type(L, i);
+								switch(t){
+									case LUA_TSTRING:{
+										printf("%s", lua_tostring(L, i));
+									}
+									break;
+									case LUA_TNUMBER:{
+										printf("%g", lua_tonumber(L, i));
+									}
+									break;
+								}
+								printf("\n");
+							}
+						}
+
+						int main (void){
+							printf("im in cpp\n");
+
+							lua_State* L = luaL_newstate();
+
+							lua_pushnumber(L, 1);
+							lua_pushstring(L, "hello lua");
+							lua_pushnumber(L, 2);
+
+							printf("source stack is :");
+							printStack(L);
+
+							// lua_pushvalue(L, 2);
+							// printf("after pushvalue 2, now stack is :\n");
+							// printStack(L);
+
+							
+							
+							lua_close(L);
+						}
+
+						编译 gcc /Users/wp/Desktop/Unity基础/cdolua.cpp -llua
