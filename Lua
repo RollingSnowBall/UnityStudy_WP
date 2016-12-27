@@ -1073,3 +1073,197 @@ Lua
 						}
 
 						编译 gcc /Users/wp/Desktop/Unity基础/cdolua.cpp -llua
+		22 扩展应用
+			22.1 Lua做配置文件
+				test.lua 文件内容
+					width = 10
+					height = 20
+				cdolua.cpp 文件内容 使用c调用lua读取lua写的配置文件
+					#include <stdio.h>
+					#include <string.h>
+					#include "lua.hpp"
+					#include "lauxlib.h"
+					#include "lualib.h"
+
+					void load(lua_State* L, const char* fname, int* w, int* h){
+						if(luaL_loadfile(L, fname) || lua_pcall(L, 0, 0, 0)){}
+						lua_getglobal(L, "width");
+						lua_getglobal(L, "height");
+						if(!lua_isnumber(L, -2)){}
+						if(!lua_isnumber(L, -1)){}
+						*w = lua_tointeger(L, -2);
+						*h = lua_tointeger(L, -1);
+						printf("width is : %d\n", *w);
+						printf("height is : %d\n", *h);
+					}
+
+					int main (void){
+						printf("im in cpp\n");
+
+						lua_State* L = luaL_newstate();
+
+						int x = 0;
+						int y = 0;
+
+						load(L, "test.lua", &x, &y);
+						
+						lua_close(L);
+					}
+
+					调试加调用
+						wangpengdeiMac:Unity基础 wp$ gcc /Users/wp/Desktop/Unity基础/cdolua.cpp -llua
+						wangpengdeiMac:Unity基础 wp$ ./a.out 
+						im in cpp
+						width is : 10
+						height is : 20
+			22.2 调用方法
+				test.lua文件
+					function printTest( ... )
+						print(...)
+						return 1
+					end
+				cdolua.cpp文件
+					#include <stdio.h>
+					#include <string.h>
+					#include "lua.hpp"
+					#include "lauxlib.h"
+					#include "lualib.h"
+
+					int main (void){
+						printf("im in cpp\n");
+
+						lua_State* L = luaL_newstate();
+						luaL_openlibs(L);  
+						if(luaL_loadfile(L, "test.lua") || lua_pcall(L, 0, 0, 0)){
+							printf("%s\n", "error loadfile");
+						}
+
+						lua_getglobal(L, "printTest");
+						lua_pushstring(L, "1234");
+
+						if(lua_pcall(L, 1, 1, 0) != 0){
+							printf("%s\n", "error lua pcall");
+						}
+
+						int z = lua_tonumber(L, -1);
+						printf("z : %d\n", z);
+						
+						lua_close(L);
+					}
+				编译
+					wangpengdeiMac:Unity基础 wp$ gcc /Users/wp/Desktop/Unity基础/cdolua.cpp -llua
+					wangpengdeiMac:Unity基础 wp$ ./a.out 
+					im in cpp
+					1234
+					z : 1
+		23 Luaua 调用 C ----尼玛我这怎么都不能c文件编译成.a或者.so
+			23.1 C 函数
+				示例:
+					static int l_sin(lua_State* L){
+						double d = lua_tonumber(L, 1); //获取参数
+						lua_pushnumber(L, sin(d)); //压入结果
+						return 1; //返回结果的数量
+					}
+				所有注册到LUA中的函数都具有相同的原型。定义在lua.h 中的lua_CFunction
+					typedef int (*lua_CFunction) (lua_State* L);
+				在lua使用这个函数之前，必须注册这个函数。可以使用 lua_pushcfunction 来进行注册。
+		24 userdata
+			userdata 提供了一块原始的内存区域，可以用来存储任何东西.
+			lua_newuserdata 会根据指定的大小分配一块内存,并将对应的userdata压入栈中，最后返回这个内存块的地址
+			void* lua_newuserdata(lua_State* L, size_t size);
+				Demo:
+					static struct StudentTag{
+						char* strName;
+						char* strNum;
+						int iSex;
+						int iAge;
+					}
+
+					static int Student(lua_State* L){
+						size_t iBytes = sizeof(struct StudentTag);
+						struct StudentTag* pStudent;
+						pStudent = (struct StudentTag*) lua_newuserdata(L, iBytes);
+						return 1;
+					}	//新的userdata已经在栈上可以直接返回给lua
+
+					static int GetName(lua_State* L){
+						struct StudentTag* pStudent = (struct StudentTag*)lua_touserdata(L, 1);
+						luaL_argcheck(L, pStudent != NULL, 1, "Wrong");
+						lua_pushstring(L, pStudent->strName);
+						return 1;
+					}
+
+					static int SetName(lua_State* L){
+						struct StudentTag* pStudent = (struct StudentTag*)lua_touserdata(L, 1);
+						luaL_argcheck(L, pStudent != NULL, && pName != "", "Wrong");
+						pStudent->strName = pName;
+						return 0;
+					}
+
+					lua:
+					require "luaDoC"
+
+					local objStudent = Student.new()
+					Student.setName(objStudent, "WP")
+					Student.setAge(objStudent, 15)
+
+					local strName = Student.getName(objStudent)
+					local iAge = Student.getAge(objStudent)
+
+					print(strName)
+					print(iAge)
+		25	元表
+			userdata 可以代表任何类型。所以当用userdata做参数时候并不能保证类型。
+			一种辨别不同类型的userdata的方法是，为每种类型创建一个唯一的元表。
+			每当创建了一个userdata后，就用相应的元表来标记他。
+			每当得到一个userdata就检查他是否拥有正确的元表。
+			由于Lua代码不能改变userdata的元表。因此无法欺骗代码。
+			int luaL_newmetatable(lua_State* L, const char* tName);
+			void luaL_getmetatable(lua_State* L, const char* tName);
+			void* luaL_checkudata(lua_State* L, int index, const char* tName);
+			newmetatable函数会创建一个新的table用作元表，并将其压入栈顶，然后将这个table与注册表中的指定名称关联起来。
+			getmetatable函数可以在注册表中检索与tname相关联的元表，
+			luaL_checkudata 可以检查栈中指定位置上是否为一个userdata，并且是否具有与给定名称相匹配的元表。
+			如果该对象不是一个userdata，或者他不具有正确的元表，将会引发一个错误。
+			否则他会返回这个userdata的地址。
+
+			int luaopen_userdatademo(lua_State* L){
+				luaL_newmetatable(L, "student");
+				luaL_register(L, "student", arrayFunc);
+				return 1;
+			}
+
+			static int Student(lua_State* L){
+				size_t iBytes = sizeof(struct StudentTag);
+				struct StudentTag* pStudent;
+				pStudent = (struct StudentTag*)lua_newuserdata(L, iBytes);
+
+				luaL_getmetatable(L, "Student");
+				lua_setmetatable(L, -2);
+				return 1;
+			}
+
+			static int GetName(lua_State* L){
+				struct StudentTag* pStudent = (struct StudentTag*)luaL_checkudata(L, 1, "student");
+				lua_pushstring(L, pStudent->strName);
+				return 1;
+			}
+		26 数组访问
+			26.1 Lua中
+				local metaarray = getmetatable(array.new(1))
+				metaarray.__index = array.get
+				metaarray.__newindex = array.set
+				metaarray.__len = array.size
+
+				a = array.new(100)
+				a[10] = true --setarray
+				print(a[10]) --getarray
+				print(#a) --getsize
+			26.2 C代码注册中修改
+				static const struct luaL_Reg  arrayLib_m[]={
+					{"__newindex", setarray},
+					{"__index", getarray},
+					{"__len", getsize},
+					{"__tostring", array2string},
+					{NULL, NULL}
+				};
